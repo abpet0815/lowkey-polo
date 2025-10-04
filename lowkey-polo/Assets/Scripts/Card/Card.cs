@@ -27,9 +27,6 @@ public class Card : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExit
     [SerializeField] private float matchShrinkDuration = 0.18f;
 
     [Header("Effect Settings")]
-    [SerializeField] private Color hoverColor = Color.yellow;
-    [SerializeField] private Color matchColor = Color.green;
-    [SerializeField] private Color mismatchColor = Color.red;
     [SerializeField] private float shakeIntensity = 0.1f;
     [SerializeField] private float mismatchAnimDuration = 0.3f;
 
@@ -42,7 +39,6 @@ public class Card : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExit
     private Coroutine _autoFlipCoroutine;
     private ParticleSystem _currentHoverVFXInstance;
     private GameManager _gameManager;
-    private Color _originalColor;
     private Vector3 _originalPosition;
 
     void Awake()
@@ -50,7 +46,6 @@ public class Card : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExit
         if (cardButton != null)
             cardButton.onClick.AddListener(OnCardClicked);
         CurrentState = CardState.FaceDown;
-        _originalColor = cardImage != null ? cardImage.color : Color.white;
         _originalPosition = transform.localPosition;
     }
 
@@ -63,7 +58,7 @@ public class Card : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExit
     {
         cardData = data;
         cardImage.sprite = cardData.cardBackSprite;
-        cardImage.color = _originalColor;
+        cardImage.color = Color.white;  // Force no tint, no alpha - full opaque white
         CurrentState = CardState.FaceDown;
         transform.localScale = Vector3.one * baseScale;
         transform.localPosition = _originalPosition;
@@ -107,12 +102,10 @@ public class Card : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExit
         _isFlipping = true;
         cardButton.interactable = false;
         _currentTween?.Kill();
-
         yield return transform.DOScaleX(0f, flipDuration / 2f).SetEase(Ease.InOutSine).WaitForCompletion();
-
         cardImage.sprite = flipToFront ? cardData.cardFaceSprite : cardData.cardBackSprite;
+        cardImage.color = Color.white;  // Reset color to no tint on flip
         CurrentState = flipToFront ? CardState.FaceUp : CardState.FaceDown;
-
         if (flipToFront)
         {
             yield return transform.DOScale(new Vector3(slapScale, slapScale, 1f), slapDuration).SetEase(Ease.OutBounce).WaitForCompletion();
@@ -122,7 +115,6 @@ public class Card : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExit
         {
             yield return transform.DOScale(Vector3.one * baseScale, flipDuration / 2f).SetEase(Ease.InOutSine).WaitForCompletion();
         }
-
         cardButton.interactable = CurrentState == CardState.FaceDown;
         _isFlipping = false;
     }
@@ -132,8 +124,6 @@ public class Card : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExit
         CurrentState = CardState.Matched;
         cardButton.interactable = false;
         CancelAutoFlip();
-        
-        // Play match effect with animation and particles
         StartCoroutine(MatchEffectRoutine());
         ShakeScreen();
     }
@@ -141,19 +131,11 @@ public class Card : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExit
     private IEnumerator MatchEffectRoutine()
     {
         _isAnimating = true;
-        
-        // Play particle effect
         if (matchEffect != null) matchEffect.Play();
-        
-        // Color and scale animation
-        if (cardImage != null) cardImage.color = matchColor;
-        
         var seq = DOTween.Sequence();
         seq.Append(transform.DOScale(matchGrowScale, matchGrowDuration).SetEase(Ease.OutBack));
         seq.Append(transform.DOScale(baseScale, matchShrinkDuration).SetEase(Ease.InBack));
         yield return seq.WaitForCompletion();
-        
-        if (cardImage != null) cardImage.color = _originalColor;
         _isAnimating = false;
     }
 
@@ -166,17 +148,9 @@ public class Card : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExit
     private IEnumerator WrongMatchRoutine()
     {
         _isAnimating = true;
-        
-        // Play mismatch particle effect
         if (mismatchEffect != null) mismatchEffect.Play();
-        
-        // Flash red color
-        if (cardImage != null) cardImage.color = mismatchColor;
-        
-        // Shake animation
         int shakeCount = 6;
         float interval = mismatchAnimDuration / shakeCount;
-        
         for (int i = 0; i < shakeCount; i++)
         {
             Vector3 shakeOffset = new Vector3(
@@ -185,23 +159,8 @@ public class Card : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExit
             transform.localPosition = _originalPosition + shakeOffset;
             yield return new WaitForSeconds(interval);
         }
-        
         transform.localPosition = _originalPosition;
-        
-        // Fade back to original color
-        float elapsed = 0f;
-        float fadeDuration = 0.2f;
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            if (cardImage != null)
-                cardImage.color = Color.Lerp(mismatchColor, _originalColor, elapsed / fadeDuration);
-            yield return null;
-        }
-        
-        if (cardImage != null) cardImage.color = _originalColor;
         _isAnimating = false;
-        
         yield return new WaitForSeconds(wrongMatchDelay);
         FlipDown();
     }
@@ -244,14 +203,11 @@ public class Card : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExit
         }
     }
 
-    // Hover effects with particles
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (CurrentState == CardState.FaceDown && !_isFlipping && !_isAnimating)
         {
             transform.DOScale(Vector3.one * hoverScale, 0.17f).SetEase(Ease.OutBack);
-            if (cardImage != null) cardImage.color = Color.Lerp(_originalColor, hoverColor, 0.3f);
-            
             if (hoverVFXPrefab != null && _currentHoverVFXInstance == null)
             {
                 _currentHoverVFXInstance = Instantiate(hoverVFXPrefab, transform.position, Quaternion.identity, transform);
@@ -265,8 +221,6 @@ public class Card : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExit
         if (CurrentState == CardState.FaceDown && !_isFlipping && !_isAnimating)
         {
             transform.DOScale(Vector3.one * baseScale, 0.17f).SetEase(Ease.InBack);
-            if (cardImage != null) cardImage.color = _originalColor;
-            
             if (_currentHoverVFXInstance != null)
             {
                 _currentHoverVFXInstance.Stop();

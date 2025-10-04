@@ -25,18 +25,14 @@ public class UIButtonFX : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerEnter(PointerEventData eventData) {
         transform.DOScale(defaultScale * settings.hoverScale, settings.tweenDuration).SetEase(Ease.OutBack);
-        if(targetImage) targetImage.DOColor(settings.highlightColor, settings.tweenDuration);
         PlaySFX(settings.hoverClip);
     }
     public void OnPointerExit(PointerEventData eventData) {
         transform.DOScale(defaultScale, settings.tweenDuration).SetEase(Ease.InOutQuad);
-        if(targetImage) targetImage.DOColor(normalColor, settings.tweenDuration);
     }
     public void OnPointerDown(PointerEventData eventData) {
         transform.DOScale(defaultScale * settings.pressScale, settings.tweenDuration/2).SetEase(Ease.InQuart)
             .OnComplete(()=>transform.DOScale(defaultScale * settings.hoverScale, settings.tweenDuration/2).SetEase(Ease.OutBack));
-        if(targetImage) targetImage.DOColor(settings.pressedColor, settings.tweenDuration/2)
-            .OnComplete(()=>targetImage.DOColor(settings.highlightColor, settings.tweenDuration/2));
         PlaySFX(settings.pressClip);
     }
     void PlaySFX(AudioClip clip) {

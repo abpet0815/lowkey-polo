@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
     private void ResetGameState()
     {
         _score = 0;
-        _comboLevel = 1;
+        _comboLevel = 0;
         _matchesFound = 0;
         _comboTimer = gameSettings != null ? gameSettings.comboTimeLimit : 3.0f;
         _flippedCards.Clear();
@@ -206,7 +206,7 @@ public class GameManager : MonoBehaviour
                 card.ForceFlipToBack();
             }
 
-            _comboLevel = 1;
+            _comboLevel = 0;
             _comboTimer = gameSettings != null ? gameSettings.comboTimeLimit : 3.0f;
             GameEvents.ComboChanged(_comboLevel);
         }
@@ -234,7 +234,7 @@ public class GameManager : MonoBehaviour
 
             if (_comboTimer <= 0)
             {
-                _comboLevel = 1;
+                _comboLevel = 0;
                 _comboTimer = gameSettings.comboTimeLimit;
                 GameEvents.ComboChanged(_comboLevel);
             }

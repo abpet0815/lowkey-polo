@@ -15,7 +15,7 @@ MonoBehaviour:
   hoverScale: 1.08
   pressScale: 0.94
   tweenDuration: 0.15
-  highlightColor: {r: 1, g: 1, b: 1, a: 0.15}
+  highlightColor: {r: 0.86415094, g: 0.86415094, b: 0.86415094, a: 0.09803922}
   pressedColor: {r: 1, g: 1, b: 1, a: 0.28}
   hoverClip: {fileID: 8300000, guid: ebff388bb67a45648bed475b8e61c2fe, type: 3}
   pressClip: {fileID: 8300000, guid: 40a650e40142a7348afd2b1704596406, type: 3}

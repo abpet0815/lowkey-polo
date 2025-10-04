@@ -37,6 +37,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI finalScoreText;
     [SerializeField] private Button playAgainButton;
     [SerializeField] private Button mainMenuButton;
+
     [Header("Main Menu Title")]
     [SerializeField] private Image mainMenuTitleImage;
     [SerializeField] private TextMeshProUGUI mainMenuTitleText;
@@ -50,18 +51,14 @@ public class UIManager : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         audioManager = AudioManager.Instance;
         transitionManager = TransitionManager.Instance;
-
         startGameButton.onClick.AddListener(ShowBoardSelect);
 
-        // Updated board sizes: 2x2, 3x4, 4x5
         size2x2Button.onClick.AddListener(() => StartGame(2, 2));
         size3x4Button.onClick.AddListener(() => StartGame(3, 4));
         size4x5Button.onClick.AddListener(() => StartGame(4, 5));
-
         pauseButton.onClick.AddListener(PauseGame);
         resumeButton.onClick.AddListener(ResumeGame);
         backToMenuButton.onClick.AddListener(BackToMainMenu);
-
         playAgainButton.onClick.AddListener(() => StartGame(gameManager.CurrentBoardSize.x, gameManager.CurrentBoardSize.y));
         mainMenuButton.onClick.AddListener(ReturnToMainMenu);
 
@@ -82,102 +79,85 @@ public class UIManager : MonoBehaviour
     private void ShowMainMenu()
     {
         if (transitionManager != null)
-        {
             transitionManager.PlayTransition(transitionManager.transitionTime);
-        }
+
         mainMenuPanel.SetActive(true);
         boardSelectPanel.SetActive(false);
         gamePanel.SetActive(false);
         pausePanel.SetActive(false);
         victoryPanel.SetActive(false);
-        // Show main menu background, hide game background
+
         if (mainMenuBackgroundImage != null) mainMenuBackgroundImage.gameObject.SetActive(true);
         if (gameBackgroundImage != null) gameBackgroundImage.gameObject.SetActive(false);
-        // Show title image only on main menu
+
         if (mainMenuTitleImage != null) mainMenuTitleImage.gameObject.SetActive(true);
-        // Hide text title
+
         if (mainMenuTitleText != null) mainMenuTitleText.gameObject.SetActive(false);
-        // Play menu music when showing main menu
+
         if (audioManager != null)
-        {
             audioManager.PlayMenuMusic();
-        }
     }
 
     private void ShowBoardSelect()
     {
         mainMenuPanel.SetActive(false);
         boardSelectPanel.SetActive(true);
-        // Always hide title image in board select
         if (mainMenuTitleImage != null) mainMenuTitleImage.gameObject.SetActive(false);
-        // Hide text title
         if (mainMenuTitleText != null) mainMenuTitleText.gameObject.SetActive(false);
     }
 
     private void StartGame(int cols, int rows)
     {
         if (transitionManager != null)
-        {
             transitionManager.PlayTransition(transitionManager.transitionTime);
-        }
+
         boardSelectPanel.SetActive(false);
         gamePanel.SetActive(true);
         pausePanel.SetActive(false);
         victoryPanel.SetActive(false);
-        // Show game background, hide main menu background
+
         if (mainMenuBackgroundImage != null) mainMenuBackgroundImage.gameObject.SetActive(false);
         if (gameBackgroundImage != null) gameBackgroundImage.gameObject.SetActive(true);
-        // Always hide title image in game
-        if (mainMenuTitleImage != null) mainMenuTitleImage.gameObject.SetActive(false);
-        // Hide text title
-        if (mainMenuTitleText != null) mainMenuTitleText.gameObject.SetActive(false);
-        scoreText.text = "Score: 0";
-        comboText.text = "";
-        gameManager.StartNewGame(new Vector2Int(cols, rows));
-    }
 
-    private void QuitGame()
-    {
-        // Method removed
+        if (mainMenuTitleImage != null) mainMenuTitleImage.gameObject.SetActive(false);
+        if (mainMenuTitleText != null) mainMenuTitleText.gameObject.SetActive(false);
+
+        scoreText.text = "Score: 0";
+        comboText.text = "0";
+        gameManager.StartNewGame(new Vector2Int(cols, rows));
     }
 
     private void PauseGame()
     {
         pausePanel.SetActive(true);
         gameManager.ChangeState(GameState.Paused);
-        Time.timeScale = 0f; // Optional: Freeze time during pause
+        Time.timeScale = 0f;
     }
 
     private void ResumeGame()
     {
         pausePanel.SetActive(false);
-        Time.timeScale = 1f; // Resume time
+        Time.timeScale = 1f;
         gameManager.ChangeState(GameState.Playing);
     }
 
     private void BackToMainMenu()
     {
-        Time.timeScale = 1f; // Make sure time is restored
+        Time.timeScale = 1f;
         pausePanel.SetActive(false);
-        // Reset the board completely
         gameManager.ResetBoard();
         if (transitionManager != null)
-        {
             transitionManager.PlayTransition(transitionManager.transitionTime);
-        }
         ShowMainMenu();
     }
 
     private void ReturnToMainMenu()
     {
-        Time.timeScale = 1f; // Make sure time is restored
+        Time.timeScale = 1f;
         victoryPanel.SetActive(false);
-        // Reset the board completely
         gameManager.ResetBoard();
         if (transitionManager != null)
-        {
             transitionManager.PlayTransition(transitionManager.transitionTime);
-        }
         ShowMainMenu();
     }
 
@@ -188,7 +168,7 @@ public class UIManager : MonoBehaviour
 
     private void UpdateCombo(int comboLevel)
     {
-        comboText.text = comboLevel > 1 ? $"Combo x{comboLevel}" : "";
+        comboText.text = comboLevel.ToString();
     }
 
     private void ShowVictory()
@@ -196,7 +176,6 @@ public class UIManager : MonoBehaviour
         gamePanel.SetActive(false);
         pausePanel.SetActive(false);
         victoryPanel.SetActive(true);
-
-        finalScoreText.text = scoreText.text;
+        finalScoreText.text = gameManager.Score.ToString();
     }
 }

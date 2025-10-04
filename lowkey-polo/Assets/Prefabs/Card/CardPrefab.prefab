@@ -136,8 +136,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardImage: {fileID: 3180998239593971744}
   cardButton: {fileID: 3257289183431661478}
-  hoverVFXPrefab: {fileID: 9186446616439801708, guid: acdb90624a404aa438447006f1026065,
-    type: 3}
+  hoverVFXPrefab: {fileID: 0}
   matchEffect: {fileID: 0}
   mismatchEffect: {fileID: 0}
   flipDuration: 0.3
@@ -145,14 +144,11 @@ MonoBehaviour:
   autoFlipDelay: 1
   hoverScale: 1.1
   baseScale: 1
-  slapScale: 1.12
+  slapScale: 1.3
   slapDuration: 0.18
   slapReturnDuration: 0.13
   matchGrowScale: 1.16
   matchGrowDuration: 0.18
   matchShrinkDuration: 0.18
-  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  matchColor: {r: 0, g: 1, b: 0, a: 1}
-  mismatchColor: {r: 1, g: 0, b: 0, a: 1}
-  shakeIntensity: 0.1
+  shakeIntensity: 1
   mismatchAnimDuration: 0.3
