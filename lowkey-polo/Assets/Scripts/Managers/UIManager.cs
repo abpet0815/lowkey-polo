@@ -131,13 +131,29 @@ public class UIManager : MonoBehaviour
     {
         pausePanel.SetActive(true);
         gameManager.ChangeState(GameState.Paused);
-        Time.timeScale = 0f;
+        startGameButton.interactable = false;
+        size2x2Button.interactable = false;
+        size3x4Button.interactable = false;
+        size4x5Button.interactable = false;
+        pauseButton.interactable = false;
+        playAgainButton.interactable = false;
+        mainMenuButton.interactable = false;
+        resumeButton.interactable = true;
+        backToMenuButton.interactable = true;
     }
 
     private void ResumeGame()
     {
         pausePanel.SetActive(false);
-        Time.timeScale = 1f;
+        startGameButton.interactable = true;
+        size2x2Button.interactable = true;
+        size3x4Button.interactable = true;
+        size4x5Button.interactable = true;
+        pauseButton.interactable = true;
+        playAgainButton.interactable = true;
+        mainMenuButton.interactable = true;
+        resumeButton.interactable = true;
+        backToMenuButton.interactable = true;
         gameManager.ChangeState(GameState.Playing);
     }
 
@@ -174,7 +190,7 @@ public class UIManager : MonoBehaviour
     private void ShowVictory()
     {
         gamePanel.SetActive(false);
-        pausePanel.SetActive(false);
+        pausePanel.SetActive(false); 
         victoryPanel.SetActive(true);
         finalScoreText.text = gameManager.Score.ToString();
     }
