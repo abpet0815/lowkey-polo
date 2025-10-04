@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc9e45c1ebc4ee34cb9466cc21dfc6dc, type: 3}
-  m_Name: UIFloatWaveSettings
+  m_Name: UIFloatWaveSettings 1
   m_EditorClassIdentifier: 
   floatHeight: 20
   floatDuration: 2
-  waveWidth: 32
+  waveWidth: 16
   waveDuration: 1.8
   waveAngle: 8
   angleDuration: 1.2

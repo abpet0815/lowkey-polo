@@ -188,7 +188,7 @@ public class GameManager : MonoBehaviour
             _matchesFound++;
             int baseScore = gameSettings != null ? gameSettings.baseScore : 100;
             float multiplier = gameSettings != null ? gameSettings.comboMultiplier : 1.5f;
-            int matchScore = Mathf.RoundToInt(baseScore * _comboLevel * multiplier);
+            int matchScore = Mathf.RoundToInt(baseScore * (_comboLevel + 1) * multiplier);
             _score += matchScore;
             _comboLevel++;
             _comboTimer = gameSettings != null ? gameSettings.comboTimeLimit : 3.0f;

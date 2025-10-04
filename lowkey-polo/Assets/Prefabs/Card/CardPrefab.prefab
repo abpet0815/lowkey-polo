@@ -136,9 +136,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardImage: {fileID: 3180998239593971744}
   cardButton: {fileID: 3257289183431661478}
-  hoverVFXPrefab: {fileID: 0}
-  matchEffect: {fileID: 0}
-  mismatchEffect: {fileID: 0}
+  blazeEffect: {fileID: 0}
+  uiEffect: {fileID: 0}
   flipDuration: 0.3
   wrongMatchDelay: 0.6
   autoFlipDelay: 1
@@ -150,5 +149,5 @@ MonoBehaviour:
   matchGrowScale: 1.16
   matchGrowDuration: 0.18
   matchShrinkDuration: 0.18
-  shakeIntensity: 1
-  mismatchAnimDuration: 0.3
+  matchedCardDestroyDelay: 1
+  radialGradientAnimDuration: 0.5
