@@ -12,9 +12,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject victoryPanel;
 
+    [Header("Background Images")]
+    [SerializeField] private Image mainMenuBackgroundImage;
+    [SerializeField] private Image gameBackgroundImage;
+
     [Header("Main Menu Buttons")]
     [SerializeField] private Button startGameButton;
-    [SerializeField] private Button quitGameButton;
 
     [Header("Board Selection Buttons")]
     [SerializeField] private Button size2x2Button;
@@ -34,6 +37,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI finalScoreText;
     [SerializeField] private Button playAgainButton;
     [SerializeField] private Button mainMenuButton;
+    [Header("Main Menu Title")]
+    [SerializeField] private Image mainMenuTitleImage;
+    [SerializeField] private TextMeshProUGUI mainMenuTitleText;
 
     private GameManager gameManager;
     private AudioManager audioManager;
@@ -46,7 +52,6 @@ public class UIManager : MonoBehaviour
         transitionManager = TransitionManager.Instance;
 
         startGameButton.onClick.AddListener(ShowBoardSelect);
-        quitGameButton.onClick.AddListener(QuitGame);
 
         // Updated board sizes: 2x2, 3x4, 4x5
         size2x2Button.onClick.AddListener(() => StartGame(2, 2));
@@ -85,6 +90,13 @@ public class UIManager : MonoBehaviour
         gamePanel.SetActive(false);
         pausePanel.SetActive(false);
         victoryPanel.SetActive(false);
+        // Show main menu background, hide game background
+        if (mainMenuBackgroundImage != null) mainMenuBackgroundImage.gameObject.SetActive(true);
+        if (gameBackgroundImage != null) gameBackgroundImage.gameObject.SetActive(false);
+        // Show title image only on main menu
+        if (mainMenuTitleImage != null) mainMenuTitleImage.gameObject.SetActive(true);
+        // Hide text title
+        if (mainMenuTitleText != null) mainMenuTitleText.gameObject.SetActive(false);
         // Play menu music when showing main menu
         if (audioManager != null)
         {
@@ -96,6 +108,10 @@ public class UIManager : MonoBehaviour
     {
         mainMenuPanel.SetActive(false);
         boardSelectPanel.SetActive(true);
+        // Always hide title image in board select
+        if (mainMenuTitleImage != null) mainMenuTitleImage.gameObject.SetActive(false);
+        // Hide text title
+        if (mainMenuTitleText != null) mainMenuTitleText.gameObject.SetActive(false);
     }
 
     private void StartGame(int cols, int rows)
@@ -108,6 +124,13 @@ public class UIManager : MonoBehaviour
         gamePanel.SetActive(true);
         pausePanel.SetActive(false);
         victoryPanel.SetActive(false);
+        // Show game background, hide main menu background
+        if (mainMenuBackgroundImage != null) mainMenuBackgroundImage.gameObject.SetActive(false);
+        if (gameBackgroundImage != null) gameBackgroundImage.gameObject.SetActive(true);
+        // Always hide title image in game
+        if (mainMenuTitleImage != null) mainMenuTitleImage.gameObject.SetActive(false);
+        // Hide text title
+        if (mainMenuTitleText != null) mainMenuTitleText.gameObject.SetActive(false);
         scoreText.text = "Score: 0";
         comboText.text = "";
         gameManager.StartNewGame(new Vector2Int(cols, rows));
@@ -115,7 +138,7 @@ public class UIManager : MonoBehaviour
 
     private void QuitGame()
     {
-        Application.Quit();
+        // Method removed
     }
 
     private void PauseGame()

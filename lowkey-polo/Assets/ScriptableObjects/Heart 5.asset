@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808974003deba33479fd4aa1c94c8138, type: 3}
+  m_Name: Heart 5
+  m_EditorClassIdentifier: 
+  cardID: 6
+  cardName: 
+  cardFaceSprite: {fileID: 21300000, guid: 17a3129204b86d84c8c9e7b7937242e7, type: 3}
+  cardBackSprite: {fileID: 21300000, guid: ba85e895f2002104a8ae25dfe6f3705c, type: 3}
+  flipSound: {fileID: 8300000, guid: aa6eea2c2a3bddc4285da1739fcd89f4, type: 3}
+  matchSound: {fileID: 8300000, guid: 67c6137454fc87d479bba19c79e7612d, type: 3}
+  matchEffect: {fileID: 0}
+  cardColor: {r: 1, g: 1, b: 1, a: 1}
