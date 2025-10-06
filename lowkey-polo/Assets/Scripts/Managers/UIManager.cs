@@ -51,8 +51,8 @@ public class UIManager : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         audioManager = AudioManager.Instance;
         transitionManager = TransitionManager.Instance;
-        startGameButton.onClick.AddListener(ShowBoardSelect);
 
+        startGameButton.onClick.AddListener(ShowBoardSelect);
         size2x2Button.onClick.AddListener(() => StartGame(2, 2));
         size3x4Button.onClick.AddListener(() => StartGame(3, 4));
         size4x5Button.onClick.AddListener(() => StartGame(4, 5));
@@ -91,8 +91,10 @@ public class UIManager : MonoBehaviour
         if (gameBackgroundImage != null) gameBackgroundImage.gameObject.SetActive(false);
 
         if (mainMenuTitleImage != null) mainMenuTitleImage.gameObject.SetActive(true);
-
         if (mainMenuTitleText != null) mainMenuTitleText.gameObject.SetActive(false);
+
+        SetMenuInteractables(true);
+        SetPauseControls(false);
 
         if (audioManager != null)
             audioManager.PlayMenuMusic();
@@ -102,6 +104,7 @@ public class UIManager : MonoBehaviour
     {
         mainMenuPanel.SetActive(false);
         boardSelectPanel.SetActive(true);
+
         if (mainMenuTitleImage != null) mainMenuTitleImage.gameObject.SetActive(false);
         if (mainMenuTitleText != null) mainMenuTitleText.gameObject.SetActive(false);
     }
@@ -118,12 +121,16 @@ public class UIManager : MonoBehaviour
 
         if (mainMenuBackgroundImage != null) mainMenuBackgroundImage.gameObject.SetActive(false);
         if (gameBackgroundImage != null) gameBackgroundImage.gameObject.SetActive(true);
-
         if (mainMenuTitleImage != null) mainMenuTitleImage.gameObject.SetActive(false);
         if (mainMenuTitleText != null) mainMenuTitleText.gameObject.SetActive(false);
 
         scoreText.text = "Score: 0";
         comboText.text = "0";
+
+        SetMenuInteractables(false);
+        SetPauseControls(false);
+        pauseButton.interactable = true;
+
         gameManager.StartNewGame(new Vector2Int(cols, rows));
     }
 
@@ -131,29 +138,20 @@ public class UIManager : MonoBehaviour
     {
         pausePanel.SetActive(true);
         gameManager.ChangeState(GameState.Paused);
-        startGameButton.interactable = false;
-        size2x2Button.interactable = false;
-        size3x4Button.interactable = false;
-        size4x5Button.interactable = false;
+
+        SetMenuInteractables(false);
+        SetPauseControls(true);
         pauseButton.interactable = false;
-        playAgainButton.interactable = false;
-        mainMenuButton.interactable = false;
-        resumeButton.interactable = true;
-        backToMenuButton.interactable = true;
     }
 
     private void ResumeGame()
     {
         pausePanel.SetActive(false);
-        startGameButton.interactable = true;
-        size2x2Button.interactable = true;
-        size3x4Button.interactable = true;
-        size4x5Button.interactable = true;
+
+        SetMenuInteractables(true);
+        SetPauseControls(true);
         pauseButton.interactable = true;
-        playAgainButton.interactable = true;
-        mainMenuButton.interactable = true;
-        resumeButton.interactable = true;
-        backToMenuButton.interactable = true;
+
         gameManager.ChangeState(GameState.Playing);
     }
 
@@ -161,9 +159,12 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         pausePanel.SetActive(false);
+
         gameManager.ResetBoard();
+
         if (transitionManager != null)
             transitionManager.PlayTransition(transitionManager.transitionTime);
+
         ShowMainMenu();
     }
 
@@ -171,9 +172,12 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         victoryPanel.SetActive(false);
+
         gameManager.ResetBoard();
+
         if (transitionManager != null)
             transitionManager.PlayTransition(transitionManager.transitionTime);
+
         ShowMainMenu();
     }
 
@@ -190,8 +194,34 @@ public class UIManager : MonoBehaviour
     private void ShowVictory()
     {
         gamePanel.SetActive(false);
-        pausePanel.SetActive(false); 
+        pausePanel.SetActive(false);
         victoryPanel.SetActive(true);
+
         finalScoreText.text = gameManager.Score.ToString();
+
+        if (startGameButton != null) startGameButton.interactable = false;
+        if (size2x2Button != null) size2x2Button.interactable = false;
+        if (size3x4Button != null) size3x4Button.interactable = false;
+        if (size4x5Button != null) size4x5Button.interactable = false;
+        if (pauseButton != null) pauseButton.interactable = false;
+
+        if (playAgainButton != null) playAgainButton.interactable = true;
+        if (mainMenuButton != null) mainMenuButton.interactable = true;
+    }
+
+    private void SetMenuInteractables(bool enabled)
+    {
+        if (startGameButton != null) startGameButton.interactable = enabled;
+        if (size2x2Button != null) size2x2Button.interactable = enabled;
+        if (size3x4Button != null) size3x4Button.interactable = enabled;
+        if (size4x5Button != null) size4x5Button.interactable = enabled;
+        if (playAgainButton != null) playAgainButton.interactable = enabled;
+        if (mainMenuButton != null) mainMenuButton.interactable = enabled;
+    }
+
+    private void SetPauseControls(bool enabled)
+    {
+        if (resumeButton != null) resumeButton.interactable = enabled;
+        if (backToMenuButton != null) backToMenuButton.interactable = enabled;
     }
 }
